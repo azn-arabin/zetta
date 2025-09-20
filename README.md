@@ -1,11 +1,11 @@
-# 🧪 Zetta Dashboard - Frontend Developer Test
+# 🧪 Zetta Dashboard
 
-A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, and **Framer Motion** for Zettabyte Technology Inc.
+A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**.
 
 ## 🌟 Live Demo
 
-- **GitHub Repository**: This repository
-- **Live Site**: Ready for deployment
+- **GitHub Repository**: [https://github.com/azn-arabin/zetta](https://github.com/azn-arabin/zetta)
+- **Live Site**: [https://zetta-five.vercel.app/](https://zetta-five.vercel.app/)
 
 ## 🎯 Features Implemented
 
@@ -88,8 +88,8 @@ A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tail
 1. **Clone the repository**
 
    ```bash
-   git clone [repository-url]
-   cd mini-project
+   git clone https://github.com/azn-arabin/zetta.git
+   cd zetta
    ```
 
 2. **Install dependencies**
@@ -258,4 +258,4 @@ The dashboard includes a comprehensive error handling demonstration:
 
 ---
 
-**Built for Zettabyte Technology Inc. Frontend Developer Test** 🚀
+**Built with ❤️ using Next.js 15** 🚀

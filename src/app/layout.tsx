@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zetta Dashboard - Mini Project",
-  description: "A mini dashboard built with Next.js 15, TypeScript, Tailwind CSS, and Framer Motion",
+  title: "Zetta Dashboard",
+  description: "A modern dashboard built with Next.js 15, TypeScript, Tailwind CSS, and Framer Motion",
 };
 
 export default function RootLayout({

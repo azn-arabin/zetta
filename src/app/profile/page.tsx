@@ -56,9 +56,17 @@ export default function Profile() {
 
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-medium">
-                    {session.user?.name?.charAt(0) || "U"}
-                  </div>
+                  {session.user?.image ? (
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name || "Profile"}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-medium">
+                      {session.user?.name?.charAt(0) || "U"}
+                    </div>
+                  )}
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                       {session.user?.name}

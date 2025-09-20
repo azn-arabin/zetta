@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 interface NavigationProps {
   onToggleSidebar?: () => void;
@@ -12,13 +13,23 @@ interface NavigationProps {
 
 export default function Navigation({ onToggleSidebar, isSidebarOpen }: NavigationProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   const navItems = [
     { href: "/", label: "Dashboard", icon: "🏠" },
     { href: "/posts", label: "Posts", icon: "📝" },
     { href: "/users", label: "Users", icon: "👥" },
   ];
+
+  const handleSignIn = () => {
+    router.push("/auth/signin");
+  };
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
+  };
 
   return (
     <>
@@ -31,7 +42,7 @@ export default function Navigation({ onToggleSidebar, isSidebarOpen }: Navigatio
               {onToggleSidebar && (
                 <motion.button
                   onClick={onToggleSidebar}
-                  className="p-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+                  className="px-2 py-1 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   initial={{ opacity: 0, x: -20 }}
@@ -61,7 +72,7 @@ export default function Navigation({ onToggleSidebar, isSidebarOpen }: Navigatio
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-8">
+            <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.href}
@@ -89,6 +100,72 @@ export default function Navigation({ onToggleSidebar, isSidebarOpen }: Navigatio
                   </Link>
                 </motion.div>
               ))}
+
+              {/* Authentication Section */}
+              <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-gray-200 dark:border-gray-700">
+                {status === "loading" ? (
+                  <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                ) : session ? (
+                  <div className="flex items-center space-x-4">
+                    {/* Profile Link */}
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                      <Link
+                        href="/profile"
+                        className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors relative ${
+                          pathname === "/profile"
+                            ? "text-blue-600 dark:text-blue-400"
+                            : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                        }`}
+                      >
+                        <span>👤</span>
+                        <span>Profile</span>
+                        {pathname === "/profile" && (
+                          <motion.div
+                            className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400"
+                            layoutId="navbar-indicator"
+                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+
+                    {/* Sign Out Button */}
+                    <motion.button
+                      onClick={handleSignOut}
+                      className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span>Sign Out</span>
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.button
+                    onClick={handleSignIn}
+                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Sign In</span>
+                  </motion.button>
+                )}
+              </div>
             </div>
 
             {/* Mobile menu button */}
@@ -135,6 +212,55 @@ export default function Navigation({ onToggleSidebar, isSidebarOpen }: Navigatio
                   <span>{item.label}</span>
                 </Link>
               ))}
+
+              {/* Mobile Authentication Section */}
+              <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 space-y-2">
+                {status === "loading" ? (
+                  <div className="flex justify-center py-4">
+                    <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : session ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                        pathname === "/profile"
+                          ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                          : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                      }`}
+                    >
+                      <span>👤</span>
+                      <span>Profile</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleSignOut();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors w-full text-left"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span>Sign Out</span>
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      router.push("/auth/signin");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors w-full text-left"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Sign In</span>
+                  </button>
+                )}
+              </div>
             </div>
           </motion.div>
         </div>

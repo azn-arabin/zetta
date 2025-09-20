@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

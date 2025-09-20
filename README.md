@@ -16,12 +16,23 @@ A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tail
 - [x] **Tailwind CSS** for styling
 - [x] **Framer Motion** for animations
 
+### 🎁 Bonus Feature - Google OAuth Authentication
+
+- [x] **NextAuth.js** integration with Google OAuth
+- [x] **Protected Profile Page** (`/profile`) with user details
+- [x] **Authentication State Management** in navigation
+- [x] **Session-based Route Protection** with middleware
+- [x] **Sign In/Sign Out** functionality with smooth transitions
+- [x] **Responsive Auth UI** for mobile and desktop
+
 ### 📱 Pages & Routes
 
 - [x] **`/` - Dashboard Home**: Static summary with animated charts and stats
 - [x] **`/posts` - Posts Page**: Fetch & display posts with Card components
 - [x] **`/posts/[id]` - Post Details**: Individual post view with navigation
 - [x] **`/users` - Users Page**: Responsive table with animated modal
+- [x] **`/auth/signin` - Sign In Page**: Google OAuth authentication
+- [x] **`/profile` - Profile Page**: Protected user profile with session details
 
 ### 🔧 Reusable Components
 
@@ -60,6 +71,7 @@ A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tail
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
 - **Animations**: Framer Motion
+- **Authentication**: NextAuth.js (Auth.js) with Google OAuth
 - **API**: JSONPlaceholder (posts & users)
 - **Fonts**: Geist Sans & Geist Mono
 
@@ -69,6 +81,7 @@ A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tail
 
 - Node.js 18+
 - npm/yarn/pnpm
+- Google Cloud Console account (for OAuth)
 
 ### Installation
 
@@ -85,13 +98,42 @@ A modern, responsive dashboard built with **Next.js 15**, **TypeScript**, **Tail
    npm install
    ```
 
-3. **Run development server**
+3. **Set up Google OAuth (Bonus Feature)**
+
+   a. Go to [Google Cloud Console](https://console.cloud.google.com/)
+
+   b. Create a new project or select existing one
+
+   c. Enable Google+ API
+
+   d. Create OAuth 2.0 credentials:
+
+   - Go to "Credentials" → "Create Credentials" → "OAuth client ID"
+   - Application type: Web application
+   - Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
+
+   e. Copy `.env.example` to `.env.local`:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   f. Fill in your credentials:
+
+   ```env
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your-random-secret-here
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   ```
+
+4. **Run development server**
 
    ```bash
    npm run dev
    ```
 
-4. **Open browser**
+5. **Open browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Build & Deploy
@@ -137,22 +179,31 @@ npm run lint
 ```
 src/
 ├── app/                   # Next.js App Router
+│   ├── auth/
+│   │   └── signin/       # Authentication pages
 │   ├── posts/            # Posts pages
 │   ├── users/            # Users page
-│   ├── layout.tsx        # Root layout
+│   ├── profile/          # Protected profile page
+│   ├── api/
+│   │   └── auth/         # NextAuth API routes
+│   ├── layout.tsx        # Root layout with SessionProvider
 │   └── page.tsx          # Dashboard home
 ├── components/           # Reusable components
 │   ├── Card.tsx         # Animated card component
 │   ├── Modal.tsx        # Animated modal
-│   ├── Navigation.tsx   # Responsive navigation
+│   ├── Navigation.tsx   # Responsive navigation with auth
 │   ├── AnimatedSidebar.tsx # Collapsible sidebar
 │   ├── Loading.tsx      # Loading spinner
 │   ├── Error.tsx        # Error display
+│   ├── Providers.tsx    # Session provider wrapper
 │   └── ErrorDemo.tsx    # Error demonstration
 ├── hooks/               # Custom React hooks
 │   └── useFetch.ts     # API data fetching
-└── types/              # TypeScript definitions
-    └── index.ts        # API response types
+├── lib/                # Library configurations
+│   └── auth.ts         # NextAuth configuration
+├── types/              # TypeScript definitions
+│   └── index.ts        # API response types
+└── middleware.ts       # Route protection middleware
 ```
 
 ## 🧪 Error Demonstration
@@ -180,6 +231,10 @@ The dashboard includes a comprehensive error handling demonstration:
 - ✅ Meaningful animations (not just fades)
 - ✅ Clean, scalable code structure
 - ✅ Responsive design for all screen sizes
+- ✅ **BONUS**: Google OAuth authentication with NextAuth.js
+- ✅ **BONUS**: Protected profile page with session management
+- ✅ **BONUS**: Authentication state in navigation
+- ✅ **BONUS**: Route protection with middleware
 
 ## 📝 API Endpoints Used
 
